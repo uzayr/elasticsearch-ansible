@@ -1,0 +1,27 @@
+---
+- include: packages-{{ ansible_pkg_mgr }}.yml
+
+- name: Add oracle repo
+  apt_repository:
+    repo: 'ppa:webupd8team/java'
+    update_cache: yes
+
+- name: Accept Oracle Java License
+  debconf:
+    name=oracle-java8-installer
+    question=shared/accepted-oracle-license-v1-1
+    value=true
+    vtype=select
+
+- name: Install java 8
+  apt:
+    name: oracle-java8-installer
+
+- name: Install deb repo of elasticsearch 2.4
+  apt:
+    deb: https://download.elastic.co/elasticsearch/elasticsearch/elasticsearch-1.7.2.deb
+
+- name: Enable systemd for elasticsearch
+  systemd:
+    name: elasticsearch
+    enabled: yes
